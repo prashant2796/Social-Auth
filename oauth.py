@@ -21,7 +21,7 @@ from config import (CLIENT_ID,
 					SCOPE_URL)
 from flask import Flask, abort, request
 import requests
-
+import datetime
 
 app = Flask(__name__)
 @app.route('/')
@@ -109,15 +109,27 @@ def get_user_info(access_token):
 	it exchanges access token to get user_info
 
 	"""
+	# Timestamp='Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
+
+	Time_stamp = {
+					"Timestamp":'{:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
+	}
 	resource_parameters={
 
 						"access_token":access_token,
 						"Content-Type":"application/json"
 
 					}
+
 	user_info=requests.get(API_RESOURCE_URL, params=resource_parameters) #get request to resource server to get back the user informaton
 	my_user_info=user_info.json() 
-	return my_user_info 	#returns the user info in json provided by google
+	my_user_info.update(Time_stamp)  #using update method to add timestamp to json 
+	return (my_user_info) 	                 #returns the user info in json provided by google
+
+# def get_time_stamp():
+# 	Timestamp='Timestamp: {:%Y-%b-%d %H:%M:%S}'.format(datetime.datetime.now())
+# 	return Timestamp
+
 
 
 if __name__ == '__main__':
